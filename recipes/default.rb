@@ -32,6 +32,9 @@ node_volume_plans.each do |node_volume_plan_name|
   Chef::Log.info("Applying volume plan: #{node_volume_plan_name}")
 
   unless volume_plan['ebs_volumes'].nil?
+
+    include_recipe 'aws'
+
     node.run_state['volumes'] ||= {}
     access_key = secrets['aws']['volumes']['access_key_id']
     secret_key = secrets['aws']['volumes']['secret_access_key']
