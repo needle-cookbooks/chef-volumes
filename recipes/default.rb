@@ -17,6 +17,9 @@
 # limitations under the License.
 #
 
+data_bag_key = Chef::EncryptedDataBagItem.load_secret(node['data_bag_key'])
+secrets = Chef::EncryptedDataBagItem.load('secrets', node.chef_environment, data_bag_key)
+
 all_volume_plan_names = data_bag('volume_plans')
 node_volume_plans = Array(node['volumes']['plans'])
 node_volume_plans.each do |node_volume_plan_name|
@@ -30,8 +33,8 @@ node_volume_plans.each do |node_volume_plan_name|
 
   unless volume_plan['ebs_volumes'].nil?
     node.run_state['volumes'] ||= {}
-    access_key = node.run_state['volumes']['aws_access_key'] || node['volumes']['aws_access_key']
-    secret_key = node.run_state['volumes']['aws_secret_access_key'] || node['volumes']['aws_secret_access_key']
+    access_key = secrets['aws']['volumes']['access_key_id']
+    secret_key = secrets['aws']['volumes']['secret_access_key']
 
     if access_key.nil? || access_key.empty? || secret_key.nil? || secret_key.empty?
       raise 'The Volumes cookbook cannot create EBS volumes without having AWS keys set.'
