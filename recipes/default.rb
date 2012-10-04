@@ -76,8 +76,12 @@ node_volume_plans.each do |node_volume_plan_name|
           lvm_lv "lvcreate-#{device_key}" do
             volume_group_name lvm_volume_group_name
             logical_volume_name logical_volume['name']
-            stripes logical_volume['stripes']
-            stripe_size logical_volume['stripe_size']
+            if logical_volume['mirror']
+              mirror logical_volume['mirror']
+            else
+              stripes logical_volume['stripes']
+              stripe_size logical_volume['stripe_size']
+            end
             logical_extents logical_volume['logical_extents']
             action :create
             notifies :run, resources(:execute => "mkfs-#{device_key}"), :immediately
