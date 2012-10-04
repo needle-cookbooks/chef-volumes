@@ -84,6 +84,7 @@ node_volume_plans.each do |node_volume_plan_name|
             logical_volume_name logical_volume['name']
             if logical_volume['mirror']
               mirror logical_volume['mirror']
+              corelog logical_volume['corelog'] if logical_volume['corelog']
             else
               stripes logical_volume['stripes']
               stripe_size logical_volume['stripe_size']
